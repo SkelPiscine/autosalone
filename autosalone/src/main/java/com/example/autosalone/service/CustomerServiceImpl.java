@@ -5,25 +5,25 @@ import com.example.autosalone.entity.operations.Purchase;
 import com.example.autosalone.entity.operations.Rental;
 import com.example.autosalone.entity.users.Customer;
 import com.example.autosalone.entity.vehicles.Vehicle;
-import com.example.autosalone.mapper.OrderMapper;
-import com.example.autosalone.mapper.PurchaseMapper;
-import com.example.autosalone.mapper.RentalMapper;
-import com.example.autosalone.mapper.VehicleMapper;
-import com.example.autosalone.model.OrderDTO;
-import com.example.autosalone.model.PurchaseDTO;
-import com.example.autosalone.model.RentalDTO;
+import com.example.autosalone.mapper.*;
+import com.example.autosalone.model.*;
 import com.example.autosalone.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService{
 
+    private final VehicleMapper vehicleMapper;
     private final VehicleRepository vehicleRepository;
+    private final CustomerMapper customerMapper;
     private final CustomerRepository customerRepository;
     private final RentalMapper rentalMapper;
     private final RentalRepository rentalRepository;
@@ -48,10 +48,8 @@ public class CustomerServiceImpl implements CustomerService{
             throw new RuntimeException("vehicle not available");
         }
         Customer customer = customerTemp.get();
-        Order newOrder = new Order().builder().veicolo(vehicle).cliente(customer).build();
+        Order newOrder = new Order().builder().vehicle(vehicle).customer(customer).build();
         newOrder = orderRepository.save(newOrder);
-        vehicle.setOrdinabile(false);
-        vehicleRepository.save(vehicle);
         return orderMapper.toDTO(newOrder);
     }
 
@@ -81,11 +79,11 @@ public class CustomerServiceImpl implements CustomerService{
             throw new RuntimeException("no vehicle found at id " + vehicleId);
         }
         Vehicle vehicle = vehicleTemp.get();
-        if (vehicle.isDisponibile())
+        if (!vehicle.isDisponibile())
         {
             throw new RuntimeException("vehicle not available");
         }
-        Purchase newPurchase = new Purchase().builder().veicolo(vehicle).build();
+        Purchase newPurchase = new Purchase().builder().vehicle(vehicle).build();
         newPurchase = purchaseRepository.save(newPurchase);
         vehicle.setDisponibile(false);
         vehicleRepository.save(vehicle);
@@ -103,17 +101,39 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
     @Override
-    public RentalDTO createRental() {
-        return null;
+    public RentalDTO createRental(LocalDate dataInizio, LocalDate dataFine,
+                                  double costoGiornaliero, int vehicleId) {
+        Optional<Vehicle> vehicleTemp = vehicleRepository.findById(vehicleId);
+        if(vehicleTemp.isEmpty()){
+            throw new RuntimeException("no vehicle found at id " + vehicleId);
+        }
+        Vehicle vehicle = vehicleTemp.get();
+        if (!vehicle.isDisponibile())
+        {
+            throw new RuntimeException("vehicle not available");
+        }
+        vehicle.setDisponibile(false);
+        vehicleRepository.save(vehicle);
+        double durataNoleggio = TimeUnit.DAYS.convert(Duration.between(dataInizio, dataFine));
+        double costoTotale = (durataNoleggio + 1) * costoGiornaliero;
+        Rental rental = new Rental().builder()
+                .veicolo(vehicle)
+                .dataInizio(dataInizio)
+                .dataFine(dataFine)
+                .costoGiornaliero(costoGiornaliero)
+                .costoTotale(costoTotale)
+                .build();
+        rentalRepository.save(rental);
+        return rentalMapper.toDTO(rental);
     }
 
     @Override
-    public List<RentalDTO> checkRentals(int customerId) {
-        Optional<Customer> customerTemp = customerRepository.findById(customerId);
+    public List<RentalDTO> checkRentals(Customer customer) {
+        Optional<Customer> customerTemp = customerRepository.findById(customer.getId());
         if (customerTemp.isEmpty()){
-            throw new RuntimeException("customer not found at id " + customerId);
+            throw new RuntimeException("customer not found at id " + customer);
         }
-        List<Rental> rentalList = rentalRepository.findByCustomerId(customerId);
+        List<Rental> rentalList = rentalRepository.findByCustomer(customer);
         return rentalMapper.toDTOList(rentalList);
     }
 
@@ -137,17 +157,68 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
     @Override
-    public Customer editProfile(Customer customer) {
-        return null;
+    public CustomerDTO editProfile(CustomerDTO customerInfo, int customerId) {
+        Optional<Customer> customerTemp = customerRepository.findById(customerId);
+        if (customerTemp.isEmpty()){
+            throw new RuntimeException("customer not found at id " + customerId);
+        }
+        Customer customerUpdated = customerTemp.get();
+        if (!customerInfo.getNome().isEmpty()){
+            customerUpdated.setNome(customerInfo.getNome());
+        }
+        if (!customerInfo.getCognome().isEmpty()){
+            customerUpdated.setCognome(customerInfo.getCognome());
+        }
+        if (!customerInfo.getTelefono().isEmpty()){
+            customerUpdated.setTelefono(customerInfo.getTelefono());
+        }
+        if (!customerInfo.getEmail().isEmpty()){
+            customerUpdated.setEmail(customerInfo.getEmail());
+        }
+        if (!customerInfo.getPassword().isEmpty()){
+            customerUpdated.setPassword(customerInfo.getPassword());
+        }
+        customerRepository.save(customerUpdated);
+        return customerMapper.toDTO(customerUpdated);
     }
 
     @Override
-    public Vehicle getVehicleBy() {
-        return null;
+    public List<VehicleDTO> findByMarca(String marca) {
+        List<Vehicle> vehicleList = vehicleRepository.findByMarca(marca);
+        return vehicleMapper.toDTOList(vehicleList);
     }
 
     @Override
-    public Vehicle getVehicleInfo(Vehicle vehicle) {
-        return null;
+    public List<VehicleDTO> findByModello(String modello) {
+        List<Vehicle> vehicleList = vehicleRepository.findByModello(modello);
+        return vehicleMapper.toDTOList(vehicleList);
+    }
+
+    @Override
+    public List<VehicleDTO> findByColore(String colore) {
+        List<Vehicle> vehicleList = vehicleRepository.findByColore(colore);
+        return vehicleMapper.toDTOList(vehicleList);
+    }
+
+    @Override
+    public List<VehicleDTO> findByCilindrata(int cilindrata) {
+        List<Vehicle> vehicleList = vehicleRepository.findByCilindrata(cilindrata);
+        return vehicleMapper.toDTOList(vehicleList);
+    }
+
+    @Override
+    public List<VehicleDTO> findByCambio(String cambio) {
+        List<Vehicle> vehicleList = vehicleRepository.findByCambio(cambio);
+        return vehicleMapper.toDTOList(vehicleList);
+    }
+
+
+    @Override
+    public VehicleDTO getVehicleInfo(int vehicleId) {
+        Optional<Vehicle> vehicleTemp = vehicleRepository.findById(vehicleId);
+        if(vehicleTemp.isEmpty()){
+            throw new RuntimeException("no vehicle found at id " + vehicleId);
+        }
+        return vehicleMapper.toDTO(vehicleTemp.get());
     }
 }

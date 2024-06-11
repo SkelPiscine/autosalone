@@ -20,9 +20,9 @@ public class Order {
     private String statoOrdine;
     @OneToOne
     @JoinColumn(name = "vehicle_id")
-    private Vehicle veicolo;
-    @OneToOne
+    private Vehicle vehicle;
+    @ManyToOne
     @JoinColumn(name = "customer_id")
-    private Customer cliente;
+    private Customer customer;
 
 }

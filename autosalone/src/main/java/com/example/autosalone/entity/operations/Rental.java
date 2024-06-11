@@ -1,10 +1,8 @@
 package com.example.autosalone.entity.operations;
 
+import com.example.autosalone.entity.users.Customer;
 import com.example.autosalone.entity.vehicles.Vehicle;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -16,6 +14,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 public class Rental {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private LocalDate dataInizio;
     private LocalDate dataFine;
@@ -25,4 +25,7 @@ public class Rental {
     @OneToOne
     @JoinColumn(name = "vehicle_id")
     private Vehicle veicolo;
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 }
