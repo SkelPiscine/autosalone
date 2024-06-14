@@ -32,5 +32,5 @@ public class Vehicle {
     private boolean nuovo;
     private boolean disponibile;
     private boolean ordinabile;
-    private boolean nonDisponibile;
+
 }
