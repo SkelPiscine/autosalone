@@ -9,6 +9,7 @@ import com.example.autosalone.mapper.*;
 import com.example.autosalone.model.*;
 import com.example.autosalone.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;

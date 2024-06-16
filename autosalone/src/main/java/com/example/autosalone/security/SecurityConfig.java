@@ -33,6 +33,7 @@ public class SecurityConfig {
                                 .requestMatchers("/admin/**").hasAuthority("ADMIN")
                                 .requestMatchers("/customer/**").hasAuthority("CUSTOMER")
                                 .requestMatchers("/seller/**").hasAuthority("SELLER")
+                                .requestMatchers("/register", "/register/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(form ->

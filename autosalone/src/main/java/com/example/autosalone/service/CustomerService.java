@@ -27,5 +27,4 @@ public interface CustomerService {
     List<VehicleDTO> findByCilindrata(int cilindrata);
     List<VehicleDTO> findByCambio(String cambio);
     VehicleDTO getVehicleInfo(int vehicleId);
-
 }
