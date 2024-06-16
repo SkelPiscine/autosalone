@@ -1,0 +1,137 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="skel1 (generated)" id="1718557864163-1">
+        <createTable tableName="admin">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="cognome" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="nome" type="VARCHAR(255)"/>
+            <column name="password" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="skel1 (generated)" id="1718557864163-2">
+        <createTable tableName="customer">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="cognome" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="nome" type="VARCHAR(255)"/>
+            <column name="password" type="VARCHAR(255)"/>
+            <column name="telefono" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="skel1 (generated)" id="1718557864163-3">
+        <createTable tableName="purchases">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="anticipo" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pagato" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="stato_ordine" type="VARCHAR(255)"/>
+            <column name="customer_id" type="INT"/>
+            <column name="vehicle_id" type="INT">
+                <constraints unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="skel1 (generated)" id="1718557864163-4">
+        <createTable tableName="rental">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="costo_giornaliero" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="costo_totale" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="data_fine" type="date"/>
+            <column name="data_inizio" type="date"/>
+            <column name="pagato" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="vehicle_id" type="INT">
+                <constraints unique="true"/>
+            </column>
+            <column name="customer_id" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="skel1 (generated)" id="1718557864163-5">
+        <createTable tableName="seller">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="cognome" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="nome" type="VARCHAR(255)"/>
+            <column name="password" type="VARCHAR(255)"/>
+            <column name="telefono" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="skel1 (generated)" id="1718557864163-6">
+        <createTable tableName="vehicle">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="accessori" type="VARBINARY(255)"/>
+            <column name="alimentazione" type="VARCHAR(255)"/>
+            <column name="anno_immatricolazione" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cambio" type="VARCHAR(255)"/>
+            <column name="cilindrata" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="colore" type="VARCHAR(255)"/>
+            <column name="disponibile" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="marca" type="VARCHAR(255)"/>
+            <column name="modello" type="VARCHAR(255)"/>
+            <column name="nuovo" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ordinabile" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="potenza" type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="prezzo" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sconto" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="skel1 (generated)" id="1718557864163-7">
+        <createIndex associatedWith="" indexName="FK6c4h31p4aatxefdr4erv6d71u" tableName="purchases">
+            <column name="customer_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="skel1 (generated)" id="1718557864163-8">
+        <createIndex associatedWith="" indexName="FK7jf1f7b8w6jotl5qw1kxn8114" tableName="rental">
+            <column name="customer_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="skel1 (generated)" id="1718557864163-9">
+        <addForeignKeyConstraint baseColumnNames="customer_id" baseTableName="purchases" constraintName="FK6c4h31p4aatxefdr4erv6d71u" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="customer" validate="true"/>
+    </changeSet>
+    <changeSet author="skel1 (generated)" id="1718557864163-10">
+        <addForeignKeyConstraint baseColumnNames="vehicle_id" baseTableName="rental" constraintName="FK6qohlnx46y05m5bykquuafobx" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="vehicle" validate="true"/>
+    </changeSet>
+    <changeSet author="skel1 (generated)" id="1718557864163-11">
+        <addForeignKeyConstraint baseColumnNames="customer_id" baseTableName="rental" constraintName="FK7jf1f7b8w6jotl5qw1kxn8114" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="customer" validate="true"/>
+    </changeSet>
+    <changeSet author="skel1 (generated)" id="1718557864163-12">
+        <addForeignKeyConstraint baseColumnNames="vehicle_id" baseTableName="purchases" constraintName="FKyqi631l62hfaqxpi1qk23xuv" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="vehicle" validate="true"/>
+    </changeSet>
+</databaseChangeLog>
