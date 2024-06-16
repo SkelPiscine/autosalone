@@ -6,6 +6,7 @@ import com.example.autosalone.model.VehicleDTO;
 import com.example.autosalone.service.SellerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -13,7 +14,8 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/seller")
+@RequestMapping("/seller")
+@PreAuthorize("hasRole('SELLER')")
 public class SellerController {
     private final SellerService sellerService;
 

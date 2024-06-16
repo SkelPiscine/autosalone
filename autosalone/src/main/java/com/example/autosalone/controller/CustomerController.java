@@ -5,6 +5,7 @@ import com.example.autosalone.model.*;
 import com.example.autosalone.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -12,7 +13,8 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/customer")
+@RequestMapping("/customer")
+@PreAuthorize("hasRole('CUSTOMER')")
 public class CustomerController {
     private final CustomerService customerService;
 

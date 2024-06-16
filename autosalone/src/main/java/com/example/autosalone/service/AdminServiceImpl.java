@@ -362,7 +362,4 @@ public class AdminServiceImpl implements AdminService{
         return sellerMapper.toDTO(seller);
     }
 
-
-
-
 }

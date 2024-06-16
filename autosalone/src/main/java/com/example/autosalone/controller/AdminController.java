@@ -4,15 +4,17 @@ import com.example.autosalone.model.*;
 import com.example.autosalone.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/admin")
+@RequestMapping("/admin")
+@PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
     private final AdminService adminService;
 
@@ -144,6 +146,7 @@ public class AdminController {
         }
     }
 
+    @GetMapping("/vehicles/ordinabile")
     public ResponseEntity<List<VehicleDTO>> getOrdinabileVehicles() {
         try {
             List<VehicleDTO> ordinabileVehicles = adminService.getOrdinabileVehicles();
