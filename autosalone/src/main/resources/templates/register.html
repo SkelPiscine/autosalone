@@ -4,27 +4,22 @@
     <title>Registrazione</title>
 </head>
 <body>
-<h1>Registrati</h1>
-<form th:action="@{/register}" th:object="${customer}" method="post">
+<h1>Registrazione</h1>
+    <form th:action="@{/register}" th:object="${customer}" method="post">
     <div>
-        <label>Nome:</label>
-        <input type="text" th:field="*{nome}" />
+        <input type="text" th:field="*{nome}" placeholder="Nome"/>
     </div>
     <div>
-        <label>Cognome:</label>
-        <input type="text" th:field="*{cognome}" />
+        <input type="text" th:field="*{cognome}" placeholder="Cognome"/>
     </div>
     <div>
-        <label>Telefono:</label>
-        <input type="text" th:field="*{telefono}" />
+        <input type="text" th:field="*{telefono}" placeholder="Telefono"/>
     </div>
     <div>
-        <label>Email:</label>
-        <input type="email" th:field="*{email}" />
+        <input type="email" th:field="*{email}" placeholder="Email"/>
     </div>
     <div>
-        <label>Password:</label>
-        <input type="password" th:field="*{password}" />
+        <input type="password" th:field="*{password}" placeholder="Password"/>
     </div>
     <div>
         <button type="submit">Registrati</button>

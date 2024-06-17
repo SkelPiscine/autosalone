@@ -25,7 +25,7 @@ public class RegistrationController {
     }
 
     @PostMapping("/register")
-    public String registerCustomer(@ModelAttribute Customer customer) {
+    public String registerCustomer(@ModelAttribute ("customer") Customer customer) {
         customer.setPassword(passwordEncoder.encode(customer.getPassword()));
         customerRepository.save(customer);
         return "redirect:/login";
